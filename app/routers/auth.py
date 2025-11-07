@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from .. import schemas, crud
@@ -14,6 +14,8 @@ async def register_user(user_in: schemas.UserCreate, db: AsyncSession = Depends(
         raise HTTPException(status_code=400, detail="Email already registered")
     new_user = await crud.create_user(db, user_in)
     return new_user
+
+
 
 @router.post("/token", response_model=schemas.Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):

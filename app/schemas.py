@@ -1,45 +1,29 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import datetime
 
 class UserBase(BaseModel):
-    first_name: str
-    last_name: str
+    name: str
     email: EmailStr
-    phone_number: str
-    gender: Optional[str]
-    age: Optional[int]
-    city: Optional[str]
-    country: Optional[str]
+    role: str
 
 class UserCreate(UserBase):
     password: str
-    role: str  # patient | doctor
-    department: Optional[str]
-    qualification: Optional[str]
-    experience: Optional[str]
-    blood_group: Optional[str]
 
-class UserOut(UserBase):
+# ✅ Used for output in register/login
+class UserOut(BaseModel):
     id: int
+    name: str
+    email: EmailStr
     role: str
-    department: Optional[str]
-    qualification: Optional[str]
-    experience: Optional[str]
-    blood_group: Optional[str]
-    status: str
-    is_active: bool
-    created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # ✅ Pydantic v2 replacement for orm_mode
 
-class StatusUpdate(BaseModel):
-    status: str  # pending | approved | rejected
-
+# ✅ Used for JWT Token response
 class Token(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str
 
+# ✅ Optional support schema
 class TokenData(BaseModel):
-    sub: Optional[str] = None
+    email: Optional[str] = None
