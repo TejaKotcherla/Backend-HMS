@@ -22,4 +22,5 @@ class User(Base):
     blood_group = Column(String(10), nullable=True)
     status = Column(String(50), default="approved")  # pending | approved | rejected
     is_active = Column(Boolean, default=True)
+    is_system = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
