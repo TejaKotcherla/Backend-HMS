@@ -49,3 +49,30 @@ async def authenticate_user(db: AsyncSession, email: str, password: str):
     if not verify_password(password, user.hashed_password):
         return None
     return user
+
+
+async def create_admin_request(db: AsyncSession, user_id: int, request_type: str):
+    from . import models
+    request = models.AdminRequest(
+        user_id=user_id,
+        request_type=request_type,
+        status="pending"
+    )
+    db.add(request)
+    await db.commit()
+    await db.refresh(request)
+    return request
+
+async def update_doctor_status(db: AsyncSession, user_id: int, new_status: str):
+    result = await db.execute(select(models.User).where(models.User.id == user_id))
+    user = result.scalars().first()
+
+    if not user:
+        return False
+
+    user.status = new_status
+    await db.commit()
+    await db.refresh(user)
+    return True
+
+

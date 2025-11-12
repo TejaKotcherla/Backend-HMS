@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.sql import func
 from .database import Base
+from sqlalchemy import ForeignKey
+
 
 class User(Base):
     __tablename__ = "users"
@@ -23,4 +25,15 @@ class User(Base):
     status = Column(String(50), default="approved")  # pending | approved | rejected
     is_active = Column(Boolean, default=True)
     is_system = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+
+class AdminRequest(Base):
+    __tablename__ = "admin_requests"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    request_type = Column(String(100), nullable=False)  # e.g., "doctor_registration"
+    status = Column(String(50), default="pending")  # pending | approved | rejected
     created_at = Column(DateTime(timezone=True), server_default=func.now())
