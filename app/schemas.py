@@ -45,7 +45,7 @@ class UserOut(BaseModel):
     experience: Optional[str] = None
 
     class Config:
-        from_attributes = True  # ✅ replaces orm_mode in Pydantic v2
+        orm_mode = True  # ✅ replaces orm_mode in Pydantic v2
 
 # ==========================================================
 # 🔹 JWT Token Models
@@ -53,6 +53,16 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+# ==========================================================
+# 🔹 Token with User (for login response)
+# ==========================================================
+class TokenWithUser(BaseModel):
+    access_token: str
+    token_type: str
+    role: str
+    user: Optional[UserOut] = None
+
 
 class TokenData(BaseModel):
     email: Optional[str] = None

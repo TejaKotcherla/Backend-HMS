@@ -75,4 +75,7 @@ async def update_doctor_status(db: AsyncSession, user_id: int, new_status: str):
     await db.refresh(user)
     return True
 
+async def get_user_by_id(db: AsyncSession, user_id: int):
+    result = await db.execute(select(models.User).where(models.User.id == user_id))
+    return result.scalar_one_or_none()
 
